@@ -9,8 +9,6 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import { PhantomWalletAdapter, BackpackWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { ClusterProvider } from "./cluster-context";
-import { SolanaClientProvider } from "../lib/solana-client-context";
 
 // Default wallets that will be available
 const wallets = [
@@ -27,9 +25,7 @@ export function Providers({ children }) {
       <ConnectionProvider endpoint={endpoint}>
         <SolanaWalletProvider wallets={wallets} autoConnect>
           <WalletModalProvider>
-            <SolanaClientProvider>
-              {children}
-            </SolanaClientProvider>
+            {children}
           </WalletModalProvider>
         </SolanaWalletProvider>
       </ConnectionProvider>
