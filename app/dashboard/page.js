@@ -18,47 +18,23 @@ import {
 import Navbar from "../components/navbar";
 import ThreeBackground from "../components/three-background";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useRealtimeTransactions } from "../hooks/use-realtime-transactions";
 
 export default function Dashboard() {
   const { publicKey, connected } = useWallet();
   const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { 
+    transactions, 
+    isConnected: isRealtimeConnected, 
+    lastUpdate,
+    refreshTransactions,
+    pendingTransactions 
+  } = useRealtimeTransactions();
 
-  // Mock data - replace with real Solana data
+  // Mock balance - replace with real Solana data
   useEffect(() => {
     if (connected && publicKey) {
-      // Simulate loading balance
       setBalance(2.456);
-      setTransactions([
-        {
-          id: 1,
-          type: "received",
-          amount: 0.5,
-          from: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-          timestamp: new Date(Date.now() - 3600000),
-          signature: "5j7s8...",
-          status: "confirmed"
-        },
-        {
-          id: 2,
-          type: "sent",
-          amount: 0.25,
-          to: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-          timestamp: new Date(Date.now() - 7200000),
-          signature: "3k9m2...",
-          status: "confirmed"
-        },
-        {
-          id: 3,
-          type: "received",
-          amount: 1.2,
-          from: "So11111111111111111111111111111111111111111112",
-          timestamp: new Date(Date.now() - 86400000),
-          signature: "7p4l1...",
-          status: "confirmed"
-        }
-      ]);
     }
   }, [connected, publicKey]);
 
@@ -175,10 +151,23 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <button className="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2 glass border border-white/20 rounded-lg hover:bg-white/10 transition-colors">
-                <RefreshCw className="w-4 h-4" />
-                Refresh
-              </button>
+              <div className="mt-4 md:mt-0 flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    isRealtimeConnected ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
+                  }`} />
+                  <span className="text-sm text-gray-400">
+                    {isRealtimeConnected ? 'Live' : 'Offline'}
+                  </span>
+                </div>
+                <button 
+                  onClick={refreshTransactions}
+                  className="flex items-center gap-2 px-4 py-2 glass border border-white/20 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Refresh
+                </button>
+              </div>
             </div>
           </motion.div>
 
