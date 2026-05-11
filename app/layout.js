@@ -2,6 +2,7 @@ import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/providers";
 import { Toaster } from "sonner";
+import AIAssistant from "./components/ai-assistant";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -55,6 +56,7 @@ export default function RootLayout({
               },
             }}
           />
+          <AIAssistant />
         </Providers>
       </body>
     </html>
