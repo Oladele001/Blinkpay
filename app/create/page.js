@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import ThreeBackground from '../components/ThreeBackground';
 import { 
   ArrowUpRight, 
   Users, 
@@ -190,6 +191,7 @@ export default function CreateBlink() {
           >
             <h1 className="text-4xl font-bold mb-2 text-gradient">Create Blink</h1>
             <p className="text-gray-300">Create beautiful, shareable payment requests</p>
+            <ThreeBackground />
           </motion.div>
 
           {/* Tabs */}

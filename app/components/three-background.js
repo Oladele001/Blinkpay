@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Sphere, Stars } from "@react-three/drei";
 import * as THREE from "three";
+import FloatingSpheres from "./FloatingSpheres";
 
 function AnimatedSphere({ position, color, speed = 1 }) {
   const meshRef = useRef();

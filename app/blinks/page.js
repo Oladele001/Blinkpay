@@ -25,14 +25,13 @@ import {
 } from "lucide-react";
 import Navbar from "../components/navbar";
 import ThreeBackground from "../components/three-background";
+import AdvancedSearch from "../components/advanced-search";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function MyBlinks() {
   const { publicKey, connected } = useWallet();
   const [blinks, setBlinks] = useState([]);
   const [filteredBlinks, setFilteredBlinks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
   const [loading, setLoading] = useState(false);
 
   // Mock data - replace with real data from your backend
@@ -93,24 +92,9 @@ export default function MyBlinks() {
     }
   }, [connected, publicKey]);
 
-  useEffect(() => {
-    let filtered = blinks;
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(blink =>
-        blink.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        blink.message.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Filter by status
-    if (filterStatus !== 'all') {
-      filtered = filtered.filter(blink => blink.status === filterStatus);
-    }
-
+  const handleFilter = (filtered) => {
     setFilteredBlinks(filtered);
-  }, [blinks, searchTerm, filterStatus]);
+  };
 
   const copyBlinkLink = (link) => {
     navigator.clipboard.writeText(link);
