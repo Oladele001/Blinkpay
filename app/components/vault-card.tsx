@@ -163,7 +163,7 @@ export function VaultCard() {
           {vaultLamports ? lamportsToSolString(vaultLamports) : "0"}{" "}
           <span className="text-lg font-normal text-muted">SOL</span>
         </p>
-        {vaultAddress && (vaultLamports ?? 0n) > 0n && (
+        {vaultAddress && (vaultLamports ?? BigInt(0)) > BigInt(0) && (
           <p className="group mt-2 flex items-center gap-1.5">
             <a
               href={getExplorerUrl(`/address/${vaultAddress}`)}
