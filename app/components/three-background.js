@@ -69,7 +69,7 @@ export default function ThreeBackground() {
       >
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={1} color="#9945FF" />
-        <pointLight position={-10, -10, -10]} intensity={0.5} color="#14F195" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#14F195" />
         
         <Stars
           radius={100}
