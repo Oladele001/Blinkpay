@@ -16,47 +16,133 @@ function AnimatedSphere({ position, color, speed = 1 }) {
     }
   });
 
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <Sphere ref={meshRef} position={position} args={[0.3, 32, 32]}>
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.5}
-          roughness={0.2}
-          metalness={0.8}
-        />
-      </Sphere>
-    </Float>
-  );
-}
-
-function ParticleField() {
   const particles = useMemo(() => {
     const temp = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 30; i++) {
       temp.push({
+        id: i,
         position: [
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 15,
         ],
+        size: Math.random() * 0.4 + 0.1,
         color: Math.random() > 0.5 ? "#9945FF" : "#14F195",
-        size: Math.random() * 0.02 + 0.01,
+        speed: Math.random() * 0.02 + 0.01,
+        amplitude: Math.random() * 2 + 1,
       });
     }
     return temp;
   }, []);
 
-  return (
-    <>
-      {particles.map((particle, i) => (
-        <mesh key={i} position={particle.position}>
-          <sphereGeometry args={[particle.size, 8, 8]} />
-          <meshBasicMaterial color={particle.color} />
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.001;
+      groupRef.current.rotation.x += 0.0005;
+    }
+  });
+
+  function AnimatedSphere({ particle }) {
+    const meshRef = useRef();
+    const [scale, setScale] = useState(1);
+
+    useFrame((state) => {
+      if (meshRef.current) {
+        meshRef.current.position.y = particle.position[1] + 
+          Math.sin(state.clock.elapsedTime * particle.speed) * particle.amplitude;
+        meshRef.current.rotation.x += 0.01;
+        meshRef.current.rotation.y += 0.01;
+      }
+    });
+
+    return (
+      <Float
+        speed={particle.speed * 2}
+        rotationIntensity={0.5}
+        floatIntensity={0.5}
+      >
+        <mesh
+          ref={meshRef}
+          position={particle.position}
+          onPointerOver={() => {
+            setHoveredSphere(particle.id);
+            setScale(1.5);
+          }}
+          onPointerOut={() => {
+            setHoveredSphere(null);
+            setScale(1);
+          }}
+          scale={scale}
+        >
+          <sphereGeometry args={[particle.size, 16, 16]} />
+          <meshBasicMaterial 
+            color={particle.color}
+            opacity={hoveredSphere === particle.id ? 1 : 0.7}
+            transparent
+          />
         </mesh>
+      </Float>
+    );
+  }
+
+  return (
+    <group ref={groupRef}>
+      {particles.map((particle) => (
+        <AnimatedSphere key={particle.id} particle={particle} />
       ))}
-    </>
+    </group>
+  );
+}
+
+function RotatingRings() {
+  const ringRef = useRef();
+  const innerRingRef = useRef();
+
+  useFrame((state) => {
+    if (ringRef.current) {
+      ringRef.current.rotation.z += 0.005;
+      ringRef.current.rotation.y += 0.002;
+    }
+    if (innerRingRef.current) {
+      innerRingRef.current.rotation.z -= 0.008;
+      innerRingRef.current.rotation.x += 0.003;
+    }
+  });
+
+  return (
+    <group>
+      <mesh ref={ringRef} position={[0, 0, 0]}>
+        <torusGeometry args={[8, 0.1, 16, 100]} />
+        <meshBasicMaterial color="#9945FF" opacity={0.3} transparent />
+      </mesh>
+      <mesh ref={innerRingRef} position={[0, 0, 0]}>
+        <torusGeometry args={[5, 0.08, 16, 100]} />
+        <meshBasicMaterial color="#14F195" opacity={0.3} transparent />
+      </mesh>
+    </group>
+  );
+}
+
+function PulsingCube() {
+  const cubeRef = useRef();
+  const [scale, setScale] = useState(1);
+
+  useFrame((state) => {
+    if (cubeRef.current) {
+      const pulseScale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.2;
+      cubeRef.current.scale.set(pulseScale, pulseScale, pulseScale);
+      cubeRef.current.rotation.x += 0.01;
+      cubeRef.current.rotation.y += 0.01;
+    }
+  });
+
+  return (
+    <Float speed={1} rotationIntensity={0.3} floatIntensity={0.5}>
+      <mesh ref={cubeRef} position={[3, 2, -2]}>
+        <boxGeometry args={[0.5, 0.5, 0.5]} />
+        <meshBasicMaterial color="#9945FF" opacity={0.6} transparent />
+      </mesh>
+    </Float>
   );
 }
 
@@ -81,11 +167,9 @@ export default function ThreeBackground() {
           speed={1}
         />
         
-        <AnimatedSphere position={[-2, 1, 0]} color="#9945FF" speed={0.5} />
-        <AnimatedSphere position={[2, -1, -1]} color="#14F195" speed={0.8} />
-        <AnimatedSphere position={[0, 2, 1]} color="#06b6d4" speed={1.2} />
-        
-        <ParticleField />
+        <FloatingSpheres />
+        <RotatingRings />
+        <PulsingCube />
       </Canvas>
     </div>
   );
