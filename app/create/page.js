@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import ThreeBackground from '../components/ThreeBackground';
+import ThreeBackground from '../components/three-background';
 import { 
   ArrowUpRight, 
   Users, 

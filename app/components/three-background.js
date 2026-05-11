@@ -147,21 +147,21 @@ function PulsingCube() {
   );
 }
 
-export default function ThreeBackground() {
+export default function ThreeBackgroundComponent() {
   return (
-    <div id="three-canvas">
+    <div className="absolute inset-0 z-0">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 75 }}
+        camera={{ position: [0, 0, 12], fov: 50 }}
         style={{ background: "transparent" }}
       >
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#9945FF" />
+        <pointLight position={[10, 10, 10]} intensity={1.5} color="#9945FF" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#14F195" />
         
         <Stars
-          radius={100}
+          radius={300}
           depth={50}
-          count={5000}
+          count={800}
           factor={4}
           saturation={0}
           fade
