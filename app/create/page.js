@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import ThreeBackground from '../components/three-background';
+import ThreeBackgroundComponent from '../components/three-background';
 import { 
   ArrowUpRight, 
   Users, 
@@ -22,7 +22,6 @@ import {
   Zap
 } from "lucide-react";
 import Navbar from "../components/navbar";
-import ThreeBackground from "../components/three-background";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function CreateBlink() {
@@ -156,7 +155,7 @@ export default function CreateBlink() {
   if (!connected) {
     return (
       <div className="relative min-h-screen bg-background text-foreground">
-        <ThreeBackground />
+        <ThreeBackgroundComponent />
         <div className="relative z-10">
           <Navbar />
           <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
@@ -177,7 +176,7 @@ export default function CreateBlink() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <ThreeBackground />
+      <ThreeBackgroundComponent />
       
       <div className="relative z-10">
         <Navbar />
@@ -191,7 +190,7 @@ export default function CreateBlink() {
           >
             <h1 className="text-4xl font-bold mb-2 text-gradient">Create Blink</h1>
             <p className="text-gray-300">Create beautiful, shareable payment requests</p>
-            <ThreeBackground />
+            <ThreeBackgroundComponent />
           </motion.div>
 
           {/* Tabs */}
