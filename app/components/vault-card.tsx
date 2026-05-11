@@ -150,7 +150,7 @@ export function VaultCard() {
           </p>
         </div>
         <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/80">
-          {(vaultLamports ?? 0n) > 0n ? "Has funds" : "Empty"}
+          {(vaultLamports ?? BigInt(0)) > BigInt(0) ? "Has funds" : "Empty"}
         </span>
       </div>
 
