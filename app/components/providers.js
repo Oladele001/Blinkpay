@@ -27,11 +27,9 @@ export function Providers({ children }) {
       <ConnectionProvider endpoint={endpoint}>
         <SolanaWalletProvider wallets={wallets} autoConnect>
           <WalletModalProvider>
-            <ClusterProvider>
-              <SolanaClientProvider>
-                {children}
-              </SolanaClientProvider>
-            </ClusterProvider>
+            <SolanaClientProvider>
+              {children}
+            </SolanaClientProvider>
           </WalletModalProvider>
         </SolanaWalletProvider>
       </ConnectionProvider>
