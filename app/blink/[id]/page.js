@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+
 import {
   ArrowUpRight,
   Users,
@@ -26,7 +28,7 @@ import ThreeBackground from "../../components/three-background";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 // Solana Actions integration
-import { createPostResponse } from "@solana/actions";
+
 
 export default function BlinkPage() {
   const { id } = useParams();
@@ -127,55 +129,14 @@ export default function BlinkPage() {
 
   const handlePayment = async () => {
     if (!connected || !blink) return;
-    
-    setPaying(true);
-    setError('');
-    
-    try {
-      // Create Solana Action for payment
-      const action = {
-        type: "action",
-        description: `Pay ${blink.title}`,
-        icon: "https://blinkpay.io/icon.png",
-        label: "Pay",
-        links: {
-          actions: [{
-            label: "Pay",
-            href: `/api/pay/${blink.id}`,
-            parameters: [
-              {
-                name: "amount",
-                label: "Amount",
-                required: true
-              },
-              {
-                name: "message",
-                label: "Message",
-                required: false
-              }
-            ]
-          }]
-        }
-      };
 
-      // Simulate payment processing
-      setTimeout(() => {
-        setPaying(false);
-        setShowSuccess(true);
-        
-        // Update blink state
-        setBlink(prev => ({
-          ...prev,
-          totalReceived: prev.totalReceived + parseFloat(amount),
-          transactions: prev.transactions + 1
-        }));
-      }, 3000);
-      
-    } catch (err) {
-      setPaying(false);
-      setError('Payment failed. Please try again.');
-      console.error('Payment error:', err);
-    }
+    // The wallet/actions runtime will execute the actual transaction when
+    // the user follows the action link.
+    const url = new URL(`/api/pay/${blink.id}`, window.location.origin);
+    url.searchParams.set("amount", amount || String(blink.amount));
+    url.searchParams.set("message", message || "");
+
+    window.location.href = url.toString();
   };
 
   const handleSplitPayment = async (recipientIndex) => {
@@ -275,7 +236,7 @@ export default function BlinkPage() {
             >
               <AlertCircle className="w-16 h-16 mx-auto mb-4 text-red-400" />
               <h2 className="text-2xl font-bold mb-2 text-white">Blink Not Found</h2>
-              <p className="text-gray-400 mb-6">This payment link doesn't exist or has expired</p>
+              <p className="text-gray-400 mb-6">This payment link doesn&apos;t exist or has expired</p>
               <Link
                 href="/"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-purple text-white rounded-lg font-semibold btn-glow"

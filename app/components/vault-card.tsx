@@ -150,7 +150,7 @@ export function VaultCard() {
           </p>
         </div>
         <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/80">
-          {(vaultLamports ?? BigInt(0)) > BigInt(0) ? "Has funds" : "Empty"}
+          {(vaultLamports ?? 0n) > 0n ? "Has funds" : "Empty"}
         </span>
       </div>
 
@@ -213,7 +213,7 @@ export function VaultCard() {
               isSending ||
               !amount ||
               parseFloat(amount) <= 0 ||
-              (vaultLamports ?? 0n) > 0n
+              Number(vaultLamports ?? 0n) > 0
             }
             className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-xs transition hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none"
           >

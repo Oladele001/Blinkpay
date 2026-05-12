@@ -25,16 +25,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           {children}
-          <Toaster 
-            position="top-right"
+          <Toaster position="top-right"
             toastOptions={{
               style: {
                 background: 'rgba(26, 0, 51, 0.95)',
