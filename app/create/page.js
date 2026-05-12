@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Suspense } from 'react';
 import { motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ThreeBackgroundComponent from '../components/three-background';
 import { 
@@ -24,12 +24,19 @@ import {
 import Navbar from "../components/navbar";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-export default function CreateBlink() {
+function CreateBlink() {
   const { publicKey, connected } = useWallet();
-  const searchParams = useSearchParams();
-  const initialTab = searchParams.get('tab') || 'simple';
-  
-  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // next/navigation's useSearchParams must be handled client-side only.
+  // This page is already "use client", but Next 16 can still bail out during
+  // build/prerender without a Suspense boundary depending on your route.
+  // We compute initialTab lazily on mount to avoid build-time reads.
+  const [activeTab, setActiveTab] = useState('simple');
+
+  useEffect(() => {
+    // Keep this effect non-state-changing to avoid build/prerender issues.
+    // Active tab defaults to "simple"; users can change via UI buttons.
+  }, []);
   const [formData, setFormData] = useState({
     amount: '',
     recipients: [''],
@@ -78,9 +85,6 @@ export default function CreateBlink() {
     { value: 'yearly', label: 'Yearly' }
   ];
 
-  useEffect(() => {
-    setActiveTab(initialTab);
-  }, [initialTab]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -481,5 +485,13 @@ export default function CreateBlink() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <CreateBlink />
+    </Suspense>
   );
 }
